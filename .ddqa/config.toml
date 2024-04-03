@@ -6,7 +6,8 @@ qa_statuses = [
 ]
 ignored_labels = [
   "changelog/no-changelog",
-  "qa/skip-qa",
+  "qa/no-code-change",
+  "qa/done",
   "release",
   "dev_package",
   "ddev",

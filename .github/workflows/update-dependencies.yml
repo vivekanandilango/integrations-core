@@ -65,13 +65,13 @@ jobs:
 
           - [ ] Feature or bugfix MUST have appropriate tests (unit, integration, e2e)
           - [ ] [Changelog entries](https://datadoghq.dev/integrations-core/guidelines/pr/#changelog-entries) must be created for modifications to shipped code
-          - [ ] Add the `qa/skip-qa` label if the PR doesn't need to be tested during QA.
+          - [ ] Add the `qa/no-code-change` label if the PR doesn't contain code changes or `qa/done` if the QA is done before merge. Otherwise the PR will require to be tested during QA.
         title: Update dependencies
         branch: bot/update-dependencies
         branch-suffix: timestamp
         delete-branch: true
         base: master
-        labels: bot,qa/skip-qa
+        labels: bot,no-code-change
         draft: false
     # We generate the changelog if and only if the PR was created
     - name: Update changelogs

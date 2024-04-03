@@ -382,7 +382,7 @@ def testable(
         nochangelog_pr = True
         skip_qa = False
         for label in pr_labels:
-            if label == "qa/skip-qa":
+            if label == "qa/done" or label == "qa/no-code-change":
                 skip_qa = True
             elif label.startswith('documentation'):
                 documentation_pr = True

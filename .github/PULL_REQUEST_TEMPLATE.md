@@ -11,5 +11,5 @@
 
 - [ ] Feature or bugfix MUST have appropriate tests (unit, integration, e2e)
 - [ ] [Changelog entries](https://datadoghq.dev/integrations-core/guidelines/pr/#changelog-entries) must be created for modifications to shipped code
-- [ ] Add the `qa/skip-qa` label if the PR doesn't need to be tested during QA.
+- [ ] Add the `qa/no-code-change` label if the PR doesn't contain code changes or `qa/done` if the QA is done before merge. Otherwise the PR will require to be tested during QA.
 - [ ] If you need to backport this PR to another branch, you can add the `backport/<branch-name>` label to the PR and it will automatically open a backport PR once this one is merged

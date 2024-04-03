@@ -28,8 +28,8 @@ interactions:
       why)](https://github.com/DataDog/integrations-core/blob/master/CONTRIBUTING.md#pull-request-title)\r\n-
       [ ] Files changes must correspond to the primary purpose of the PR as described
       in the title (small unrelated changes should have their own PR)\r\n- [ ] PR
-      must have `changelog/` and `integration/` labels attached\r\n- [ ] If the PR
-      doesn''t need to be tested during QA, please add a `qa/skip-qa` label.","reactions":{"url":"https://api.github.com/repos/DataDog/integrations-core/issues/15520/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"timeline_url":"https://api.github.com/repos/DataDog/integrations-core/issues/15520/timeline","performed_via_github_app":null,"state_reason":null,"score":1.0}]}'
+      must have `changelog/` and `integration/` labels attached\r\n- 
+      [ ] Add the `qa/no-code-change` label if the PR doesn''t contain code changes or `qa/done` if the QA is done before merge. Otherwise the PR will require to be tested during QA.","reactions":{"url":"https://api.github.com/repos/DataDog/integrations-core/issues/15520/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"timeline_url":"https://api.github.com/repos/DataDog/integrations-core/issues/15520/timeline","performed_via_github_app":null,"state_reason":null,"score":1.0}]}'
     headers:
       Access-Control-Allow-Origin:
       - '*'
