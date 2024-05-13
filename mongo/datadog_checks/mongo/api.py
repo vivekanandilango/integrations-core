@@ -134,20 +134,30 @@ class MongoApi(object):
         self.deployment_type = StandaloneDeployment()
 
     def _get_alibaba_deployment_type(self):
+        # TODO: This is not only for Alibaba, but also for Amazon DocumentDB.
         is_master_payload = self['admin'].command('isMaster')
         if is_master_payload.get('msg') == 'isdbgrid':
             return MongosDeployment(shard_map=self.refresh_shards())
 
         # On alibaba cloud, a mongo node is either a mongos or part of a replica set.
         repl_set_payload = self['admin'].command("replSetGetStatus")
-        if repl_set_payload.get('configsvr') is True:
-            cluster_role = 'configsvr'
-        elif self['admin'].command('shardingState').get('enabled') is True:
-            # Use `shardingState` command to know whether or not the replicaset
-            # is a shard or not.
-            cluster_role = 'shardsvr'
-        else:
+        try:
+            if repl_set_payload.get('configsvr') is True:
+                cluster_role = 'configsvr'
+            elif self['admin'].command('shardingState').get('enabled') is True:
+                # Use `shardingState` command to know whether or not the replicaset
+                # is a shard or not.
+                cluster_role = 'shardsvr'
+            else:
+                cluster_role = None
+        except Exception as e:
+            # Hack on Amazon DocumentDB, where `shardingState` is not available.
+            self._log.debug(
+                "Unable to run `shardingState`, got: %s. Assuming this is an Amazon DocumentDB instance.", str(e)
+            )
+            # `getCmdLineOpts` is forbidden on Alibaba ApsaraDB
             cluster_role = None
+
         return self._get_rs_deployment_from_status_payload(repl_set_payload, cluster_role)
 
     def refresh_shards(self):
