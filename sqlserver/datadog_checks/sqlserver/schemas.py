@@ -192,15 +192,16 @@ class Schemas:
     """
     
     #sends all the data in one go but split in chunks (like Seth's solution)
-    def collect_schemas_data(self):
+    def collect_schemas_data(self, db_name):
         self._dataSubmitter.reset()
         start_time = time.time()
         self._log.warning("Starting schema collection {}".format(start_time))
         # for now only setting host and tags and metada
         self._dataSubmitter.set_base_event_data(self._check.resolved_hostname, self._tags, self._check._config.cloud_metadata)
         #returns Stop, Stop == True.
+        # dbmorders_1
         def fetch_schema_data(cursor, db_name):
-            if db_name != "dbmorders_1":
+            if db_name != db_name:
                 return
             times_dict = {"execute" : 0, "fetch_all": 0 }
             start_time_db = time.time()
@@ -243,7 +244,10 @@ class Schemas:
             self._log.error("Finished collecting for DB - {} elapsed time {}".format(db_name, time.time() - start_time_db))
             self._log.error("From this time execute took - {} fetch_all took {}".format(times_dict["execute"], times_dict["fetch_all"]))
             return False
-        self._check.do_for_databases(fetch_schema_data, self._check.get_databases())
+        if db_name != "dbmorders_1":
+            self._check.do_for_databases2(fetch_schema_data, self._check.get_databases())
+        else:
+            self._check.do_for_databases(fetch_schema_data, self._check.get_databases())
         # submit the last chunk of data if any
         self._dataSubmitter.submit()
         self._log.error("Finished collect_schemas_data spent {}".format(time.time() - start_time))

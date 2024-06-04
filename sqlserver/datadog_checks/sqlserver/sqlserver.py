@@ -126,6 +126,7 @@ class SQLServer(AgentCheck):
         self.proc_type_mapping = {"gauge": self.gauge, "rate": self.rate, "histogram": self.histogram}
 
         self._schemas = Schemas(self)
+        self._schemas_2 = Schemas(self)
 
         # DBM
         self.statement_metrics = SqlserverStatementMetrics(self, self._config)
@@ -752,6 +753,23 @@ class SQLServer(AgentCheck):
                 if not is_azure_sql_database(engine_edition):
                     cursor.execute(SWITCH_DB_STATEMENT.format(self.connection.DEFAULT_DATABASE))
 
+    def do_for_databases2(self, action, databases):
+        engine_edition = self.static_info_cache.get(STATIC_INFO_ENGINE_EDITION)
+        with self.connection._open_managed_db_connections(self.DEFAULT_DB_KEY+"1", key_prefix="mydb"):
+            with self.connection.get_managed_cursor() as cursor:
+                for db in databases:                    
+                    try:
+                        if not is_azure_sql_database(engine_edition):
+                            cursor.execute(SWITCH_DB_STATEMENT.format(db))
+                        stop = action(cursor, db)        
+                        if stop:
+                            break;                  
+                    except Exception as e:
+                        print("An exception occurred during do_for_databases in db - {}: {}".format(db, e))
+                # Switch DB back to MASTER
+                if not is_azure_sql_database(engine_edition):
+                    cursor.execute(SWITCH_DB_STATEMENT.format(self.connection.DEFAULT_DATABASE))
+
     def _check_database_conns(self):
         engine_edition = self.static_info_cache.get(STATIC_INFO_ENGINE_EDITION)
         if is_azure_sql_database(engine_edition):
@@ -787,7 +805,8 @@ class SQLServer(AgentCheck):
                 self.activity.run_job_loop(self.tags)
                 self.sql_metadata.run_job_loop(self.tags)
             start_time = time.time()
-            self._schemas.collect_schemas_data() 
+            self._schemas.collect_schemas_data("dbmorders_1") 
+            self._schemas_2.collect_schemas_data("dbmorders")
             elapsed_time = time.time() - start_time
             print("TOTAL Elapsed time for collect_schemas_data:", elapsed_time, "seconds")
         else:
