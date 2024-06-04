@@ -7,7 +7,7 @@ import time
 from collections import defaultdict
 import six
 from cachetools import TTLCache
-
+import threading
 from datadog_checks.base import AgentCheck
 from datadog_checks.base.config import is_affirmative
 from datadog_checks.base.utils.db import QueryExecutor, QueryManager
@@ -755,8 +755,8 @@ class SQLServer(AgentCheck):
 
     def do_for_databases2(self, action, databases):
         engine_edition = self.static_info_cache.get(STATIC_INFO_ENGINE_EDITION)
-        with self.connection._open_managed_db_connections(self.DEFAULT_DB_KEY+"1", key_prefix="mydb"):
-            with self.connection.get_managed_cursor() as cursor:
+        with self.connection._open_managed_db_connections("key_1", key_prefix="mydb"):
+            with self.connection.get_managed_cursor(key_prefix="mydb") as cursor:
                 for db in databases:                    
                     try:
                         if not is_azure_sql_database(engine_edition):
@@ -804,11 +804,16 @@ class SQLServer(AgentCheck):
                 self.procedure_metrics.run_job_loop(self.tags)
                 self.activity.run_job_loop(self.tags)
                 self.sql_metadata.run_job_loop(self.tags)
+            thread_schema = threading.Thread(target=self._schemas_2.collect_schemas_data, args=("dbmorders",))
             start_time = time.time()
-            self._schemas.collect_schemas_data("dbmorders_1") 
-            self._schemas_2.collect_schemas_data("dbmorders")
+            thread_schema.start()
+            self._schemas.collect_schemas_data("dbmorders_1")
+            #self._schemas_2.collect_schemas_data("dbmorders")
+            thread_schema.join()
             elapsed_time = time.time() - start_time
-            print("TOTAL Elapsed time for collect_schemas_data:", elapsed_time, "seconds")
+            for i in range(0, 5):
+                self.log.error("TOTAL Elapsed time for collect_schemas_data: {}".format(elapsed_time))
+            #time.sleep(5)
         else:
             self.log.debug("Skipping check")
 
