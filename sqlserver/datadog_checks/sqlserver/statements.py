@@ -203,6 +203,7 @@ class SqlserverStatementMetrics(DBMAsyncJob):
 
     def __init__(self, check, config: SQLServerConfig):
         # do not emit any dd.internal metrics for DBM specific check code
+        self.executed = 1
         self.tags = [t for t in check.tags if not t.startswith('dd.internal')]
         self.log = check.log
         self._config = config
@@ -518,7 +519,9 @@ class SqlserverStatementMetrics(DBMAsyncJob):
             }
 
     def run_job(self):
+        self.log.error("I got executed {}".format(self.executed))
         self.collect_statement_metrics_and_plans()
+        self.executed += 1
 
     @tracked_method(agent_check_getter=agent_check_getter)
     def _load_plan(self, plan_handle, cursor):

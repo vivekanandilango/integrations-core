@@ -970,7 +970,7 @@ def test_statement_stored_procedure_characters_limit(
 @pytest.mark.integration
 @pytest.mark.usefixtures('dd_environment')
 def test_statement_with_embedded_characters(aggregator, datadog_agent, dd_run_check, dbm_instance, bob_conn):
-    dbm_instance['query_metrics']['collection_interval'] = 0.0000001
+    dbm_instance['query_metrics']['collection_interval'] = 0.1
     check = SQLServer(CHECK_NAME, {}, [dbm_instance])
     query = "EXEC nullCharTest;"
 
@@ -999,6 +999,7 @@ def test_statement_with_embedded_characters(aggregator, datadog_agent, dd_run_ch
     assert matched_rows, "should have collected the metric row with expected procedure name"
     assert "text" in matched_rows[0]
     assert "\x00" not in matched_rows[0]["text"]
+    assert False
 
 
 def _mock_database_list():
