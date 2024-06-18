@@ -48,7 +48,7 @@ instances:
     ## @param prometheus_url - string - required
     ## The URL where your application metrics are exposed by Prometheus.
     #
-    prometheus_url: http://localhost:2379/metrics
+    - prometheus_url: http://localhost:2379/metrics
 
     ## @param prometheus_metrics_prefix - string - optional
     ## Removes a given <PREFIX> from exposed Prometheus metrics.
