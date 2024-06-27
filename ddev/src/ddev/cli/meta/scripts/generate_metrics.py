@@ -20,7 +20,7 @@ def generate_metrics(app: Application, integration: str, api_url: str, api_key: 
     """Generate metrics with fake values for an integration
 
     \b
-    $ ddev meta scripts generate-metrics ray --api-url <URL> --api-key <API_KEY>
+    `$ ddev meta scripts generate-metrics ray --api-url <URL> --api-key <API_KEY>`
     """
 
     import random
