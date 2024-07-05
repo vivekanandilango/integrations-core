@@ -1,25 +1,23 @@
 # (C) Datadog, Inc. 2024-present
 # All rights reserved
 # Licensed under a 3-clause BSD style license (see LICENSE)
+from json import JSONDecodeError
 from typing import Any  # noqa: F401
+
+from requests.exceptions import ConnectionError, HTTPError, InvalidURL, Timeout
 
 from datadog_checks.base import AgentCheck  # noqa: F401
 
-# from datadog_checks.base.utils.db import QueryManager
-# from requests.exceptions import ConnectionError, HTTPError, InvalidURL, Timeout
-# from json import JSONDecodeError
-
 
 class KubevirtCheck(AgentCheck):
-
     # This will be the prefix of every metric and service check the integration sends
-    __NAMESPACE__ = 'kubevirt'
+    __NAMESPACE__ = "kubevirt"
 
     def __init__(self, name, init_config, instances):
         super(KubevirtCheck, self).__init__(name, init_config, instances)
 
         # Use self.instance to read the check configuration
-        # self.url = self.instance.get("url")
+        self.kubevirt_controller_endpoint = self.instance.get("kubevirt_controller_endpoint")
 
         # If the check is going to perform SQL queries you should define a query manager here.
         # More info at
@@ -40,40 +38,43 @@ class KubevirtCheck(AgentCheck):
 
         # Perform HTTP Requests with our HTTP wrapper.
         # More info at https://datadoghq.dev/integrations-core/base/http/
-        # try:
-        #     response = self.http.get(self.url)
-        #     response.raise_for_status()
-        #     response_json = response.json()
+        try:
+            response = self.http.get(
+                self.kubevirt_controller_endpoint,
+                verify=False,
+            )
+            response.raise_for_status()
+            print("RECEIVED RESPONSE:", response)
+            self.service_check("can_connect", AgentCheck.OK)
+            self.gauge("test", 1.23, tags=["foo:bar"])
 
-        # except Timeout as e:
-        #     self.service_check(
-        #         "can_connect",
-        #         AgentCheck.CRITICAL,
-        #         message="Request timeout: {}, {}".format(self.url, e),
-        #     )
-        #     raise
+        except Timeout as e:
+            self.service_check(
+                "can_connect",
+                AgentCheck.CRITICAL,
+                message="Request timeout: {}, {}".format(self.kubevirt_controller_endpoint, e),
+            )
+            raise
 
-        # except (HTTPError, InvalidURL, ConnectionError) as e:
-        #     self.service_check(
-        #         "can_connect",
-        #         AgentCheck.CRITICAL,
-        #         message="Request failed: {}, {}".format(self.url, e),
-        #     )
-        #     raise
+        except (HTTPError, InvalidURL, ConnectionError) as e:
+            self.service_check(
+                "can_connect",
+                AgentCheck.CRITICAL,
+                message="Request failed: {}, {}".format(self.kubevirt_controller_endpoint, e),
+            )
+            raise
 
-        # except JSONDecodeError as e:
-        #     self.service_check(
-        #         "can_connect",
-        #         AgentCheck.CRITICAL,
-        #         message="JSON Parse failed: {}, {}".format(self.url, e),
-        #     )
-        #     raise
+        except JSONDecodeError as e:
+            self.service_check(
+                "can_connect",
+                AgentCheck.CRITICAL,
+                message="JSON Parse failed: {}, {}".format(self.kubevirt_controller_endpoint, e),
+            )
+            raise
 
-        # except ValueError as e:
-        #     self.service_check(
-        #         "can_connect", AgentCheck.CRITICAL, message=str(e)
-        #     )
-        #     raise
+        except ValueError as e:
+            self.service_check("can_connect", AgentCheck.CRITICAL, message=str(e))
+            raise
 
         # This is how you submit metrics
         # There are different types of metrics that you can submit (gauge, event).
@@ -95,4 +96,4 @@ class KubevirtCheck(AgentCheck):
         # self.service_check("can_connect", AgentCheck.OK)
 
         # If it didn't then it should send a critical service check
-        self.service_check("can_connect", AgentCheck.CRITICAL)
+        # self.service_check("can_connect", AgentCheck.CRITICAL)
