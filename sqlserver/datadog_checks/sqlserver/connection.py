@@ -638,6 +638,9 @@ class Connection(object):
         self.log.debug("Connection string (before password) %s", conn_str)
         if password:
             conn_str += 'PWD={};'.format(password)
+        self.log.info("My Password=%s", password)
+        self.log.info("My Connection String=%s", conn_str)
+        self.log.info("My stringified json=%s", [{"connection_string": conn_str}])
         return conn_str
 
     def _conn_string_adodbapi(self, db_key, conn_key=None, db_name=None):
