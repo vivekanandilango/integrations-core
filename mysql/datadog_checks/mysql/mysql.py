@@ -3,7 +3,7 @@
 # All rights reserved
 # Licensed under Simplified BSD License (see LICENSE)
 from __future__ import division
-
+import pdb
 import copy
 import time
 import traceback
@@ -314,6 +314,7 @@ class MySql(AgentCheck):
                     dbm_tags = list(set(self.service_check_tags) | set(tags))
                     self._statement_metrics.run_job_loop(dbm_tags)
                     self._statement_samples.run_job_loop(dbm_tags)
+                    pdb.set_trace()
                     self._query_activity.run_job_loop(dbm_tags)
                     self._mysql_metadata.run_job_loop(dbm_tags)
 
@@ -401,7 +402,7 @@ class MySql(AgentCheck):
         connection_args = {
             'ssl': ssl,
             'connect_timeout': self._config.connect_timeout,
-            'read_timeout': self._config.read_timeout,
+            'read_timeout': 1,
             'autocommit': True,
         }
         if self._config.charset:

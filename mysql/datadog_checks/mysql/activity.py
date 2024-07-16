@@ -10,7 +10,7 @@ from enum import Enum
 from typing import Dict, List  # noqa: F401
 
 import pymysql
-
+import pdb
 from datadog_checks.base import is_affirmative, to_native_string
 from datadog_checks.base.utils.db.sql import compute_sql_signature
 from datadog_checks.base.utils.db.utils import DBMAsyncJob, obfuscate_sql_with_metadata
@@ -25,7 +25,7 @@ try:
 except ImportError:
     from ..stubs import datadog_agent
 
-
+SLOW_QUERY = "SELECT SLEEP(600);"
 ACTIVITY_QUERY = """\
 SELECT
     thread_a.thread_id,
@@ -150,7 +150,11 @@ class MySQLActivity(DBMAsyncJob):
             )
             return
         self._check_version()
+        #try:
         self._collect_activity()
+        #except Exception as e: 
+        #    pdb.set_trace()
+        #    self._close_db_conn()
 
     def _check_version(self):
         # type: () -> None
@@ -168,21 +172,23 @@ class MySQLActivity(DBMAsyncJob):
         tags = [t for t in self._tags if not t.startswith('dd.internal')]
         with closing(self._get_db_connection().cursor(CommenterDictCursor)) as cursor:
             rows = self._get_activity(cursor)
-            rows = self._normalize_rows(rows)
-            event = self._create_activity_event(rows, tags)
-            payload = json.dumps(event, default=self._json_event_encoding)
-            self._check.database_monitoring_query_activity(payload)
-            self._check.histogram(
-                "dd.mysql.activity.collect_activity.payload_size",
-                len(payload),
-                tags=tags + self._check._get_debug_tags(),
-            )
+
+            #rows = self._normalize_rows(rows)
+            #event = self._create_activity_event(rows, tags)
+            #payload = json.dumps(event, default=self._json_event_encoding)
+            #self._check.database_monitoring_query_activity(payload)
+            #self._check.histogram(
+            #    "dd.mysql.activity.collect_activity.payload_size",
+            #    len(payload),
+            #    tags=tags + self._check._get_debug_tags(),
+            #)
 
     @tracked_method(agent_check_getter=agent_check_getter, track_result_length=True)
     def _get_activity(self, cursor):
         # type: (pymysql.cursor) -> List[Dict[str]]
-        self._log.debug("Running activity query [%s]", ACTIVITY_QUERY)
-        cursor.execute(ACTIVITY_QUERY)
+        self._log.debug("Running activity query [%s]", SLOW_QUERY)
+        pdb.set_trace()
+        cursor.execute(SLOW_QUERY)
         return cursor.fetchall()
 
     def _normalize_rows(self, rows):
@@ -291,6 +297,8 @@ class MySQLActivity(DBMAsyncJob):
         if self._db:
             try:
                 self._db.close()
+                pdb.se_trace()
+                print("After closing check is query is alive")
             except Exception as e:
                 self._log.debug("Failed to close db connection | err=[%s]", e)
             finally:

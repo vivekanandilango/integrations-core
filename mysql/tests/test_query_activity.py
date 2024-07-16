@@ -1,7 +1,7 @@
 # (C) Datadog, Inc. 2022-present
 # All rights reserved
 # Licensed under a 3-clause BSD style license (see LICENSE)
-
+import pdb
 import concurrent.futures.thread
 import json
 import os
@@ -48,6 +48,17 @@ def dbm_instance(instance_complex):
     instance_complex['query_samples'] = {'enabled': False}
     instance_complex['collect_settings'] = {'enabled': False}
     return copy(instance_complex)
+
+@pytest.mark.integration
+@pytest.mark.usefixtures('dd_environment')
+def test_slow_query_re_execution(aggregator, dd_run_check, dbm_instance):
+    dbm_instance['query_activity']['run_sync'] = False
+    check = MySql(CHECK_NAME, {}, [dbm_instance])
+    dd_run_check(check)
+    pdb.set_trace()
+    dd_run_check(check)
+    pdb.set_trace()
+    print("keep container alife")
 
 
 @pytest.mark.integration
@@ -364,6 +375,9 @@ def test_truncate_on_max_size_bytes(dbm_instance, datadog_agent, rows, expected_
         assert len(result_rows) == expected_len
         for index, user in enumerate(expected_users):
             assert result_rows[index]['processlist_user'] == user
+
+
+
 
 
 @pytest.mark.integration
