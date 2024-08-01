@@ -26,6 +26,14 @@ DEFAULT_METRICS = {
     'autodiscovery_errors': 'autodiscovery.errors',
     'autodiscovery_poll_duration': 'autodiscovery.poll_duration',
     'autodiscovery_watched_resources': 'autodiscovery.watched_resources',
+    'autoscaling_queue_adds': 'autoscaling.queue_adds',
+    'autoscaling_queue_depth': 'autoscaling.queue_depth',
+    'autoscaling_queue_latency': 'autoscaling.queue_latency',
+    'autoscaling_queue_longest_running_processor': 'autoscaling.queue_longest_running_processor',
+    'autoscaling_queue_retries': 'autoscaling.queue_retries',
+    'autoscaling_queue_unfinished_work': 'autoscaling.queue_unfinished_work',
+    'autoscaling_queue_work_duration': 'autoscaling.queue_work_duration',
+    'autoscaling_status_condition': 'autoscaling.status_condition',
     'cluster_checks_busyness': 'cluster_checks.busyness',
     'cluster_checks_configs_dangling': 'cluster_checks.configs_dangling',
     'cluster_checks_configs_dispatched': 'cluster_checks.configs_dispatched',
@@ -63,6 +71,9 @@ DEFAULT_METRICS = {
     'workloadmeta_notifications_sent': 'workloadmeta.notifications_sent',
     'workloadmeta_stored_entities': 'workloadmeta.stored_entities',
     'workloadmeta_subscribers': 'workloadmeta.subscribers',
+    'workload_autoscaling_horizontal_scaling': 'workload_autoscaling.horizontal_scaling',
+    'workload_autoscaling_rollout_triggered': 'workload_autoscaling.rollout_triggered',
+    'workload_autoscaling_vertical_scaling': 'workload_autoscaling.vertical_scaling',
 }
 
 
