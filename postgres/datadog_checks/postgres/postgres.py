@@ -788,6 +788,7 @@ class PostgreSql(AgentCheck):
                 if aws_managed_authentication['enabled']:
                     # if IAM auth is enabled, region must be set. Validation is done in the config
                     region = self.cloud_metadata['aws']['region']
+                    self.log.info("Using IAM authentication for RDS, role_arn: %s", aws_managed_authentication.get('role_arn'))
                     password = aws.generate_rds_iam_token(
                         host=self._config.host,
                         username=self._config.user,
@@ -795,6 +796,7 @@ class PostgreSql(AgentCheck):
                         region=region,
                         role_arn=aws_managed_authentication.get('role_arn'),
                     )
+                    self.log.info("Generated IAM token for RDS %s", password)
             elif 'azure' in self.cloud_metadata:
                 azure_managed_authentication = self.cloud_metadata['azure']['managed_authentication']
                 if azure_managed_authentication['enabled']:
