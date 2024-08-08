@@ -14,6 +14,7 @@ except ImportError:
 from datadog_checks.base import AgentCheck, ConfigurationError, is_affirmative
 from datadog_checks.base.utils.aws import rds_parse_tags_from_endpoint
 import json
+from datadog_checks.base.utils.db.utils import get_agent_host_tags
 
 SSL_MODES = {'disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'}
 TABLE_COUNT_LIMIT = 200
@@ -304,6 +305,10 @@ class PostgresConfig:
             if isinstance(value, list):
                 result.extend(value)
         check.warning("natasha hereee %s", result)
+        try:
+            check.warning("natasha hereeee 2 %s", get_agent_host_tags())
+        except:
+            check.warning("natasha hereeee 3")
         return result
 
     @staticmethod
