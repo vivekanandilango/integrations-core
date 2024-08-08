@@ -38,9 +38,9 @@ class ReplayCheck(AgentCheck):
     'init_config, instance_config',
     [
         pytest.param(
-            {'tags': ['bar:baz']}, {'process_isolation': True, 'tags': ['foo:bar']}, id='Instance-level config'
+            {'tags': ['bar:baz']}, {'process_isolation': False, 'tags': ['foo:bar']}, id='Instance-level config'
         ),
-        pytest.param({'tags': ['bar:baz'], 'process_isolation': True}, {'tags': ['foo:bar']}, id='Init-level config'),
+        pytest.param({'tags': ['bar:baz'], 'process_isolation': False}, {'tags': ['foo:bar']}, id='Init-level config'),
     ],
 )
 def test_replay_all(caplog, dd_run_check, aggregator, datadog_agent, init_config, instance_config):
