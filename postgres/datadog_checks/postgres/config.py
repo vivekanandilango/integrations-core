@@ -292,22 +292,18 @@ class PostgresConfig:
         '''
         Get the tags from the agent host and return them as a list of strings.
         '''
-        host_tags = datadog_agent.get_host_tags()
-        check.warning("natasha testing _get_agent_tags tags 1: %s", host_tags)
         result = []
+        host_tags = datadog_agent.get_host_tags()
         if not host_tags:
             return result
         try:
             tags_dict = json.loads(host_tags) or {}
-            check.warning("natasha testing _get_agent_tags 2: %s", tags_dict)
-            for key, value in tags_dict.items():
-                if isinstance(value, list):
-                    result.extend(value)
-                else:
-                    pass
         except:
-            pass
-        check.warning("natasha testing _get_agent_tags 3: %s", result)
+            return result
+        for key, value in tags_dict.items():
+            if isinstance(value, list):
+                result.extend(value)
+        check.warning("natasha hereee %s", result)
         return result
 
     @staticmethod
