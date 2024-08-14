@@ -1,0 +1,391 @@
+extends:
+- _base.yaml
+metadata:
+  device:
+    fields:
+      vendor:
+        value: eltek
+metrics:
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.1
+    name: batteryStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.5.1
+    name: batteryVoltageStatus
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.5.5
+    name: batteryVoltage
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.6.1
+    name: batteryCurrentStatus
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.6.5
+    name: batteryCurrent
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.9.5
+    name: batteryRemainingCapacity
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.8.5
+    name: batteryTimeLeft
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.7.1
+    name: batteryTemperatureStatus
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.10.7.5
+    name: batteryTemperature
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.9.1
+    name: loadStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.9.2.1
+    name: loadCurrentStatus
+- MIB: SP2-MIB
+  scale_factor: 0.1
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.9.2.5
+    name: loadCurrent
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.3.1
+    name: mainsStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.3.4.1.2.1
+    name: mainsVoltageStatus
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.3.4.1.6.1
+    name: mainsVoltage
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.5.1
+    name: rectifierStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.5.2.1
+    name: rectifierCurrentStatus
+- MIB: SP2-MIB
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.5.2.5
+    name: rectifierCurrent
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.11.2.1.2.1.6
+    name: InputSPDStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.11.2.1.2.1.7
+    name: InputDoorStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.11.2.1.2.1.8
+    name: InputOverTempStatus
+- MIB: SP2-MIB
+  mapping:
+    0: error
+    1: normal
+    2: minorAlarm
+    3: majorAlarm
+    4: disabled
+    5: disconnected
+    6: notPresent
+    7: minorAndMajor
+    8: majorLow
+    9: minorLow
+    10: majorHigh
+    11: minorHigh
+    12: event
+    13: valueVolt
+    14: valueAmp
+    15: valueTemp
+    16: valueUnit
+    17: valuePerCent
+    18: critical
+    19: warning
+  symbol:
+    OID: 1.3.6.1.4.1.12148.10.11.2.1.2.1.9
+    name: InputHVACStatus
