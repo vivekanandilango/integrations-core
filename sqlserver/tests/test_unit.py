@@ -11,12 +11,15 @@ from collections import namedtuple
 import mock
 import pytest
 from deepdiff import DeepDiff
+import xml.etree.ElementTree as ET
+import re
 
 from datadog_checks.dev import EnvVars
 from datadog_checks.sqlserver import SQLServer
 from datadog_checks.sqlserver.connection import split_sqlserver_host_port
 from datadog_checks.sqlserver.metrics import SqlFractionMetric, SqlMasterDatabaseFileStats
 from datadog_checks.sqlserver.schemas import Schemas, SubmitData
+from datadog_checks.sqlserver.deadlocks import Deadlocks
 from datadog_checks.sqlserver.sqlserver import SQLConnectionError
 from datadog_checks.sqlserver.utils import (
     Database,
@@ -869,3 +872,47 @@ def test_exception_handling_by_do_for_dbs(instance_docker):
         'datadog_checks.sqlserver.utils.is_azure_sql_database', return_value={}
     ):
         schemas._fetch_for_databases()
+
+#obfuscate_no_except_wrapper
+def test_deadlock_calls_obfuscator(instance_docker):
+    check = SQLServer(CHECK_NAME, {}, [instance_docker])
+    test_xml = """
+                <event name="xml_deadlock_report" package="sqlserver" timestamp="2024-08-20T08:30:35.762Z">
+                	<data name="xml_report">
+                		<type name="xml" package="package0"/>
+                		<value>
+                			<deadlock>
+                				<victim-list>
+                					<victimProcess id="process12108eb088"/>
+                				</victim-list>
+                				<process-list>
+                					<process id="process12108eb088">
+                						<executionStack>
+                							<frame procname="adhoc" line="1" stmtstart="38" stmtend="180" sqlhandle="0">\nunknown    </frame>
+                							<frame procname="adhoc" line="1" stmtend="128" sqlhandle="0">\nunknown    </frame>
+                						</executionStack>
+                						<inputbuf>\nUPDATE [datadog_test-1].dbo.deadlocks SET b = b + 100 WHERE a = 2;   </inputbuf>
+                					</process>
+                					<process id="process1215b77088">
+                						<executionStack>
+                							<frame procname="adhoc" line="1" stmtstart="38" stmtend="180" sqlhandle="0">\nunknown    </frame>
+                							<frame procname="adhoc" line="1" stmtend="126" sqlhandle="0">\nunknown    </frame>
+                						</executionStack>
+                						<inputbuf>\nUPDATE [datadog_test-1].dbo.deadlocks SET b = b + 20 WHERE a = 1;   </inputbuf>
+                					</process>
+                				</process-list>
+                			</deadlock>
+                		</value>
+                	</data>
+                </event> 
+                """
+    expected_xml_string = '<event name="xml_deadlock_report" package="sqlserver" timestamp="2024-08-20T08:30:35.762Z"> <data name="xml_report"> <type name="xml" package="package0" /> <value> <deadlock> <victim-list> <victimProcess id="process12108eb088" /> </victim-list> <process-list> <process id="process12108eb088"> <executionStack> <frame procname="adhoc" line="1" stmtstart="38" stmtend="180" sqlhandle="0">obfuscated</frame> <frame procname="adhoc" line="1" stmtend="128" sqlhandle="0">obfuscated</frame> </executionStack> <inputbuf>obfuscated</inputbuf> </process> <process id="process1215b77088"> <executionStack> <frame procname="adhoc" line="1" stmtstart="38" stmtend="180" sqlhandle="0">obfuscated</frame> <frame procname="adhoc" line="1" stmtend="126" sqlhandle="0">obfuscated</frame> </executionStack> <inputbuf>obfuscated</inputbuf> </process> </process-list> </deadlock> </value> </data> </event>'
+    with mock.patch('datadog_checks.sqlserver.deadlocks.Deadlocks.obfuscate_no_except_wrapper', return_value="obfuscated"):
+        config = type("Config", (object,), { "deadlocks_config": {"max_deadlocks": 5}})
+        deadlocks = Deadlocks(check, "", config)
+        root = ET.fromstring(test_xml)
+        deadlocks.obfuscate_xml(root)
+        result_string = ET.tostring(root, encoding='unicode')
+        result_string = result_string.replace('\t', '').replace('\n', '')
+        result_string = re.sub(r'\s{2,}', ' ', result_string)
+        assert expected_xml_string == result_string
